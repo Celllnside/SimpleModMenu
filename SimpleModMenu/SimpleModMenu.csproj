@@ -1,19 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>disable</Nullable>
-		<RootNamespace>InfRefreshes</RootNamespace>
+		<RootNamespace>SimpleModMenu</RootNamespace>
 		<LangVersion>latest</LangVersion>
 		<IsPackable>false</IsPackable>
-		<AssemblyVersion>1.2.1.0</AssemblyVersion>
-		<FileVersion>1.2.1.0</FileVersion>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>1.0.0.0</FileVersion>
 		<NeutralLanguage>en-US</NeutralLanguage>
-		<AssemblyName>InfRefreshes</AssemblyName>
+		<AssemblyName>SimpleModMenu</AssemblyName>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 
-		<!-- CHANGE THIS to your install path -->
 		<GameDir>D:\SteamLibrary\steamapps\common\Megabonk</GameDir>
 		<BepInExCore>$(GameDir)\BepInEx\core</BepInExCore>
 		<InteropDir>$(GameDir)\BepInEx\interop</InteropDir>
@@ -58,20 +57,23 @@
 		<Reference Include="UnityEngine.CoreModule">
 			<HintPath>$(InteropDir)\UnityEngine.CoreModule.dll</HintPath>
 		</Reference>
+		<Reference Include="UnityEngine.IMGUIModule">
+			<HintPath>$(InteropDir)\UnityEngine.IMGUIModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.InputLegacyModule">
+			<HintPath>$(InteropDir)\UnityEngine.InputLegacyModule.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.TextRenderingModule">
+			<HintPath>$(InteropDir)\UnityEngine.TextRenderingModule.dll</HintPath>
+		</Reference>
 	</ItemGroup>
 
 	<ItemGroup>
 		<Compile Include="Core.cs" />
+		<Compile Include="GuiController.cs" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <None Include="MegaHOP.csproj" />
-	</ItemGroup>
-
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="Exists('$(GameDir)')">
-		<!-- Ensure destination directory exists -->
-		<MakeDir Directories="$(GameDir)\BepInEx\plugins" />
-		<!-- Use xcopy for better reliability with spaces; /Y overwrite, /I assume dir -->
-		<Exec Command="xcopy /Y /I &quot;$(TargetPath)&quot; &quot;$(GameDir)\BepInEx\plugins\&quot;" IgnoreExitCode="true" />
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+		<Exec Command="COPY &quot;$(TargetPath)&quot; &quot;$(GameDir)\BepInEx\plugins&quot;" />
 	</Target>
 </Project>
