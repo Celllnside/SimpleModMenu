@@ -1,0 +1,77 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<RootNamespace>InfRefreshes</RootNamespace>
+		<LangVersion>latest</LangVersion>
+		<IsPackable>false</IsPackable>
+		<AssemblyVersion>1.2.1.0</AssemblyVersion>
+		<FileVersion>1.2.1.0</FileVersion>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<AssemblyName>InfRefreshes</AssemblyName>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+
+		<!-- CHANGE THIS to your install path -->
+		<GameDir>D:\SteamLibrary\steamapps\common\Megabonk</GameDir>
+		<BepInExCore>$(GameDir)\BepInEx\core</BepInExCore>
+		<InteropDir>$(GameDir)\BepInEx\interop</InteropDir>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- BepInEx v6 core + IL2CPP + Il2CppInterop -->
+		<Reference Include="BepInEx.Core">
+			<HintPath>$(BepInExCore)\BepInEx.Core.dll</HintPath>
+		</Reference>
+		<Reference Include="BepInEx.Unity.IL2CPP">
+			<HintPath>$(BepInExCore)\BepInEx.Unity.IL2CPP.dll</HintPath>
+		</Reference>
+		<Reference Include="Il2CppInterop.Common">
+			<HintPath>$(BepInExCore)\Il2CppInterop.Common.dll</HintPath>
+		</Reference>
+		<Reference Include="Il2CppInterop.Runtime">
+			<HintPath>$(BepInExCore)\Il2CppInterop.Runtime.dll</HintPath>
+		</Reference>
+
+		<!-- Harmony: prefer HarmonyX.dll if present, else 0Harmony.dll -->
+		<Reference Include="HarmonyLib" Condition="Exists('$(BepInExCore)\HarmonyX.dll')">
+			<HintPath>$(BepInExCore)\HarmonyX.dll</HintPath>
+		</Reference>
+		<Reference Include="HarmonyLib" Condition="Exists('$(BepInExCore)\0Harmony.dll')">
+			<HintPath>$(BepInExCore)\0Harmony.dll</HintPath>
+		</Reference>
+
+		<!-- Minimal IL2CPP interop set (generated after first run) -->
+		<Reference Include="Assembly-CSharp">
+			<HintPath>$(InteropDir)\Assembly-CSharp.dll</HintPath>
+		</Reference>
+		<Reference Include="Il2Cpp__Generated">
+			<HintPath>$(InteropDir)\Il2Cpp__Generated.dll</HintPath>
+		</Reference>
+		<Reference Include="Il2Cppmscorlib">
+			<HintPath>$(InteropDir)\Il2Cppmscorlib.dll</HintPath>
+		</Reference>
+		<Reference Include="Il2CppSystem">
+			<HintPath>$(InteropDir)\Il2CppSystem.dll</HintPath>
+		</Reference>
+		<Reference Include="UnityEngine.CoreModule">
+			<HintPath>$(InteropDir)\UnityEngine.CoreModule.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="Core.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="MegaHOP.csproj" />
+	</ItemGroup>
+
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="Exists('$(GameDir)')">
+		<!-- Ensure destination directory exists -->
+		<MakeDir Directories="$(GameDir)\BepInEx\plugins" />
+		<!-- Use xcopy for better reliability with spaces; /Y overwrite, /I assume dir -->
+		<Exec Command="xcopy /Y /I &quot;$(TargetPath)&quot; &quot;$(GameDir)\BepInEx\plugins\&quot;" IgnoreExitCode="true" />
+	</Target>
+</Project>
